@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %}
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savat va Buyurtma berish</title>
+    <link rel="stylesheet" href="{% static 'food/css/style.css' %}">
+    <style>
+        /* Savat va forma uchun qo'shimcha sodda stillar */
+        .order-section { padding: 40px 0; font-family: sans-serif; }
+        .order-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-between; }
+        .cart-box { flex: 1; min-width: 300px; background: #fdfdfd; border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+        .form-box { width: 400px; background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .cart-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; }
+        .item-info { flex: 1; margin-left: 15px; }
+        .item-info h4 { margin: 0 0 5px 0; color: #452817; }
+        .item-info p { margin: 0; color: #777; font-size: 14px; }
+        .quantity-controls { display: flex; align-items: center; gap: 10px; }
+        .btn-qty { display: inline-block; width: 30px; height: 30px; text-align: center; line-height: 28px; border: 1px solid #452817; background: #fff; color: #452817; font-weight: bold; text-decoration: none; border-radius: 4px; }
+        .btn-qty:hover { background: #452817; color: #fff; }
+        .total-price-box { font-size: 18px; font-weight: bold; margin-top: 20px; text-align: right; color: #452817; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #452817; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 12px; background: #F1B301; border: none; color: #fff; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .btn-submit:hover { background: #d69e00; }
+        .empty-cart-msg { text-align: center; padding: 40px 0; color: #888; }
+        .btn-back { display: inline-block; margin-top: 15px; padding: 10px 20px; background: #452817; color: #fff; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="menu">
+                <div class="logo">
+                    <a href="{% url 'index' %}">
+                        <svg width="52" height="55" viewBox="0 0 52 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M31.8607 53.4586C31.8607 53.4586 42.5 48.5 42.5 35.5C42.5 22.5 31.8607 17.5 31.8607 17.5" fill="#452817"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="menu__ul">
+                    <div class="phone--shop">
+                        <div class="phone">
+                            <a href="tel:998712005400" class="phone--number">(+99871) 200-54-00</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="order-section">
+        <div class="container">
+            <h2 style="color: #452817; margin-bottom: 30px;">Sizning savatchangiz</h2>
+
+            <div class="order-container">
+                <div class="cart-box">
+                    {% if orders_items %}
+                        {% for item in orders_items %}
+                            <div class="cart-item">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}">
+                                {% else %}
+                                    <img src="{% static 'food/img/tandoor-non.png' %}" alt="Non">
+                                {% endif %}
+
+                                <div class="item-info">
+                                    <h4>{{ item.product.title }}</h4>
+                                    <p>{{ item.product.price|intcomma }} so'm</p>
+                                </div>
+
+                                <div class="quantity-controls">
+                                    <a href="{% url 'remove_from_cart' item.product.id %}" class="btn-qty">-</a>
+                                    <span style="font-weight: bold; font-size: 16px;">{{ item.count }} ta</span>
+                                    <a href="{% url 'add_to_cart' item.product.id %}" class="btn-qty">+</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <div class="total-price-box">
+                            Jami: {{ total_price|intcomma }} so'm
+                        </div>
+                    {% else %}
+                        <div class="empty-cart-msg">
+                            <h3>Sizning savatingiz hozircha bo'sh</h3>
+                            <p>Xaridni davom ettirish uchun asosiy sahifaga qayting.</p>
+                            <a href="{% url 'index' %}" class="btn-back">Nonlar menyusi</a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if orders_items %}
+                <div class="form-box">
+                    <h3 style="color: #452817; margin-top: 0; margin-bottom: 20px;">Yetkazib berish ma'lumotlari</h3>
+                    <form method="POST" action="{% url 'main_order' %}">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="id_name">Ismingiz:</label>
+        <input type="text" id="id_name" name="name" placeholder="Ismingizni kiriting" required>
+    </div>
+
+    <div class="form-group">
+        <label for="id_phone_number">Telefon raqamingiz:</label>
+        <input type="text" id="id_phone_number" name="phone_number" value="+998" placeholder="+998901234567" required>
+    </div>
+
+    <div class="form-group">
+        <label for="id_address">Yetkazib berish manzili:</label>
+        <textarea id="id_address" name="address" rows="3" placeholder="To'liq manzilingizni kiriting" required></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit">Buyurtmani tasdiqlash</button>
+</form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</body>
+</html>

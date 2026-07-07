@@ -1,0 +1,508 @@
+/* 1. ASOSIY SOZLAMALAR (RESET & VARIABLES) */
+:root {
+    --primary-color: #D27D2D;    /* Oltinrang / To'q sariq */
+    --dark-brown: #4A2E1B;       /* To'q jigarrang (Matnlar va fon uchun) */
+    --light-brown: #654321;      /* O'rtacha jigarrang */
+    --bg-light: #FDFBF7;         /* Och qaymoqrang fon */
+    --bg-footer: #1A110B;        /* Eng to'q jigarrang */
+    --text-muted: #7A7A7A;
+    --white: #FFFFFF;
+    --font-main: 'Arial', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--white);
+    color: var(--dark-brown);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Tugmalar (Buttons) */
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn--primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn--primary:hover {
+    background-color: var(--dark-brown);
+}
+
+.btn--dark {
+    background-color: var(--dark-brown);
+    color: var(--white);
+}
+
+.btn--dark:hover {
+    background-color: var(--primary-color);
+}
+
+/* 2. HEADER */
+.header {
+    background-color: var(--white);
+    padding: 0;
+    border-bottom: 1px solid #F0E6DF;
+}
+
+.header__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 90px;
+}
+
+.logo img {
+    height: 50px;
+}
+
+.nav__list {
+    display: flex;
+    gap: 35px;
+}
+
+.nav__list a {
+    font-weight: 600;
+    color: var(--dark-brown);
+    font-size: 1.05rem;
+    transition: 0.3s;
+}
+
+.nav__list a:hover, .nav__list a.active {
+    color: var(--primary-color);
+}
+
+.header__contacts {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    height: 100%;
+}
+
+.phone__link {
+    font-weight: 800;
+    color: var(--dark-brown);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 3. HERO SECTION - MAKETDAGI JIGARRANG FON EFFEKTI */
+.hero {
+    background: linear-gradient(to right, var(--white) 65%, var(--dark-brown) 65%);
+    overflow: hidden;
+    position: relative;
+    min-height: 550px;
+    display: flex;
+    align-items: center;
+}
+
+.hero__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.hero__content {
+    flex: 0 0 55%;
+    max-width: 600px;
+    z-index: 2;
+    padding-right: 20px;
+}
+
+.hero__title {
+    font-size: calc(2.2rem + 1.5vw);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 25px;
+    color: var(--dark-brown);
+    word-wrap: break-word;
+}
+
+.hero__text {
+    font-size: 1.25rem;
+    color: #555;
+    margin-bottom: 35px;
+    max-width: 450px;
+}
+
+.hero .btn--primary {
+    background-color: #E69500;
+    color: var(--white);
+    padding: 14px 40px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+}
+
+.hero .btn--primary:hover {
+    background-color: var(--dark-brown);
+}
+
+.hero__image {
+    flex: 0 0 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.hero__image img {
+    max-height: 500px;
+    width: auto;
+    object-fit: contain;
+    transform: translateX(-10%);
+}
+
+/* 4. ADVANTAGES */
+.advantages {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 60px 20px;
+}
+
+.advantage__item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    background: #FFFBF7;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(101, 67, 33, 0.05);
+}
+
+.advantage__icon {
+    background-color: #F5EBE1;
+    padding: 15px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.advantage__info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.advantage__info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* 5. PRODUCTS SECTION */
+.products {
+    padding: 40px 20px 80px;
+}
+
+.products__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.products__header h2 {
+    font-size: 2rem;
+}
+
+.view-all {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.products__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.product__card {
+    background: var(--white);
+    border: 1px solid #F0E6DF;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: 0.3s ease;
+}
+
+.product__card:hover {
+    box-shadow: 0 10px 25px rgba(101, 67, 33, 0.1);
+    transform: translateY(-5px);
+}
+
+.product__img {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.product__img img {
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product__title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.product__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product__price {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--dark-brown);
+}
+
+.btn__cart {
+    background-color: var(--dark-brown);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn__cart:hover {
+    background-color: var(--primary-color);
+}
+
+.btn__cart img {
+    width: 20px;
+    filter: invert(1);
+}
+
+/* 6. MOBILE APP BANNER */
+.mobile-app {
+    background-color: var(--dark-brown);
+    color: var(--white);
+    overflow: hidden;
+    padding: 60px 0 0;
+}
+
+.mobile-app__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-app__content {
+    max-width: 500px;
+    padding-bottom: 60px;
+}
+
+.mobile-app__content h2 {
+    font-size: 2.5rem;
+    line-height: 1.3;
+    margin-bottom: 15px;
+}
+
+.mobile-app__content p {
+    color: #CBC2BB;
+    margin-bottom: 30px;
+}
+
+.app__links {
+    display: flex;
+    gap: 15px;
+}
+
+.app__links img {
+    height: 45px;
+}
+
+.mobile-app__mockup img {
+    max-height: 400px;
+    vertical-align: bottom;
+}
+
+/* 7. FOOTER */
+.footer {
+    background-color: var(--bg-footer);
+    color: #FFFBF7;
+    padding: 60px 0 30px;
+    font-size: 0.95rem;
+}
+
+.footer__wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
+    gap: 40px;
+    border-bottom: 1px solid #332216;
+    padding-bottom: 40px;
+}
+
+.footer__brand img {
+    height: 45px;
+    margin-bottom: 20px;
+}
+
+.footer__brand p {
+    color: #998A80;
+}
+
+.footer h4 {
+    color: var(--white);
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.footer ul li {
+    margin-bottom: 10px;
+}
+
+.footer ul li a {
+    color: #CBC2BB;
+    transition: 0.3s;
+}
+
+.footer ul li a:hover {
+    color: var(--primary-color);
+}
+
+.footer__contacts p {
+    color: #CBC2BB;
+    margin-bottom: 12px;
+}
+
+/* TO'G'RILANGAN JORALANUVCHI SOTSIAL IKONKALAR */
+.social__icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.social__icons a {
+    background-color: rgba(255, 255, 255, 0.1); /* Shaffof oq dumaloq oyna */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Sichqoncha ustiga kelganda fon butunlay oq bo'ladi */
+.social__icons a:hover {
+    background-color: var(--white);
+    transform: translateY(-3px);
+}
+
+/* Ikonkalarni (rasmlarni) to'liq oq rangga o'tkazish filtri */
+.social__icons img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: invert(1) brightness(2); /* Qora rasmni oppoq qiladi */
+    transition: all 0.3s ease;
+}
+
+/* Ustiga borganda fon oq bo'lgani uchun rasm qaytib to'q rangga o'tadi */
+.social__icons a:hover img {
+    filter: invert(0) brightness(1);
+}
+
+/* RESPONSIVE EFFECT */
+@media (max-width: 992px) {
+    .hero {
+        background: var(--white);
+        padding: 40px 0;
+    }
+    .hero__wrapper, .mobile-app__wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero__content, .mobile-app__content {
+        max-width: 100%;
+        margin-bottom: 40px;
+        padding-right: 0;
+    }
+    .hero__text {
+        margin: 0 auto 30px;
+    }
+    .hero__image, .mobile-app__mockup {
+        justify-content: center;
+    }
+    .hero__image img {
+        transform: translateX(0);
+        max-height: 350px;
+    }
+    .advantages {
+        flex-direction: column;
+    }
+    .footer__wrapper {
+        grid-template-columns: 1fr 1fr;
+    }
+    .header__wrapper {
+        flex-direction: column;
+        gap: 15px;
+        height: auto;
+        padding: 15px 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer__wrapper {
+        grid-template-columns: 1fr;
+    }
+    .hero__title {
+        font-size: 2.3rem;
+    }
+    .app__links {
+        justify-content: center;
+    }
+}

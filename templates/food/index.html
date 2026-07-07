@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %}
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonvoy - Shinam va Mazzali Nonlar</title>
+    <link rel="stylesheet" href="{% static 'food/css/style.css' %}">
+    <style>
+        /* Soni o'zgartirgich (Counter) uchun chiroyli va aniq stil */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            background: #f1f0ff;
+            border-radius: 8px;
+            padding: 2px;
+        }
+        .btn-counter {
+            background: #7A5CFA;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-counter:hover {
+            background: #5b3fd4;
+        }
+        .counter-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            min-width: 25px;
+            text-align: center;
+            margin: 0 5px;
+        }
+        /* Shaxsiy kabinet navbar dizayni */
+        .cabinet-nav-link {
+            background: #7A5CFA;
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .cabinet-nav-link:hover {
+            background: #5b3fd4;
+            color: white;
+        }
+        .logout-nav-link {
+            color: #dc3545;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .logout-nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container header__wrapper">
+            <div class="logo">
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'food/img/logo.png' %}" alt="Nonvoy Logo">
+                </a>
+            </div>
+
+            <nav class="nav">
+                <ul class="nav__list" style="display: flex; align-items: center;">
+                    <li><a href="{% url 'index' %}" class="active">Asosiy</a></li>
+                    <li><a href="#">Nonlar</a></li>
+                    <li>
+                        <a href="{% url 'main_order' %}" id="nav-cart-count">
+                            Savat ({% if orders %}{{ orders|length }}{% else %}0{% endif %})
+                        </a>
+                    </li>
+                    <li><a href="#">Do'konlar</a></li>
+                    <li><a href="#">Biz haqimizda</a></li>
+
+                    <li style="margin-left: 15px; display: flex; align-items: center;">
+                        {% if request.user.is_authenticated %}
+                            <a href="{% url 'user_cabinet' %}" class="cabinet-nav-link">
+                                👤 Kabinet (+{{ request.user.username|slice:"-4:" }})
+                            </a>
+                            <a href="/logout/" class="logout-nav-link">Chiqish</a>                        {% else %}
+                            <button onclick="document.getElementById('jwtModal').style.display = 'flex'; document.getElementById('phoneStep').style.display = 'block'; document.getElementById('codeStep').style.display = 'none';" style="background: #7A5CFA; color: white; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s;">
+                                Kirish
+                            </button>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="header__contacts">
+                <a href="tel:+998991234567" class="phone__link">(99) 123-45-67</a>
+
+                <a href="{% url 'main_order' %}" class="btn btn--primary" style="text-decoration: none; text-align: center; display: inline-block;">
+                    <span id="cart-total-btn">
+                        {% if total_price and total_price != '0' and total_price != 0 %}
+                            {{ total_price|intcomma }} so'm
+                        {% else %}
+                            Savat bo'sh
+                        {% endif %}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero__wrapper">
+            <div class="hero__content">
+                <h1 class="hero__title">Siz izlagan mazzali nonlar</h1>
+                <p class="hero__text">Har kuni yangi va issiq nonlarni eshigingizgacha yetkazib beramiz!</p>
+                <a href="{% url 'main_order' %}" class="btn btn--dark">Buyurtma berish &rarr;</a>
+            </div>
+            <div class="hero__image">
+                <img src="{% static 'food/img/all.png' %}" alt="Mazzali nonlar savati">
+            </div>
+        </div>
+    </section>
+
+    <section class="advantages container">
+        <div class="advantage__item">
+            <div class="advantage__icon">
+                <img src="{% static 'food/img/icon-leaf.png' %}" alt="Tabiiy">
+            </div>
+            <div class="advantage__info">
+                <h3>Tabiiy mahsulotlar</h3>
+                <p>Faqat sifatli va tabiiy mahsulotlardan foydalanamiz</p>
+            </div>
+        </div>
+
+        <div class="advantage__item">
+            <div class="advantage__icon">
+                <img src="{% static 'food/img/icon-delivery.png' %}" alt="Yetkazib berish">
+            </div>
+            <div class="advantage__info">
+                <h3>Tez yetkazib berish</h3>
+                <p>Buyurtmangizni tez va vaqtida yetkazib beramiz</p>
+            </div>
+        </div>
+
+        <div class="advantage__item">
+            <div class="advantage__icon">
+                <img src="{% static 'food/img/icon-badge.png' %}" alt="Sifat">
+            </div>
+            <div class="advantage__info">
+                <h3>Sifat kafolati</h3>
+                <p>Sifatli mahsulot va xizmatga kafolat beramiz</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="products container">
+        <div class="products__header">
+            <h2>Bizning nonlarimiz</h2>
+            <a href="#" class="view-all">Barchasini ko'rish &rarr;</a>
+        </div>
+
+        <div class="products__grid">
+            {% for product in products %}
+            <div class="product__card">
+                <div class="product__img">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                    {% else %}
+                        <img src="{% static 'food/img/tandoor-non.png' %}" alt="Default non">
+                    {% endif %}
+                </div>
+                <h3 class="product__title">{{ product.title }}</h3>
+                <div class="product__footer" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <span class="product__price">{{ product.price|intcomma }} so'm</span>
+
+                    <div class="quantity-control">
+                        <button onclick="changeQuantity(event, '{{ product.id }}', 'minus')" class="btn-counter">-</button>
+
+                        <span id="qty-{{ product.id }}" class="counter-value">
+                            {% with p_id=product.id|stringformat:"s" %}
+                                {% if p_id in orders %}
+                                    {% for key, value in orders.items %}
+                                        {% if key == p_id %}{{ value }}{% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            {% endwith %}
+                        </span>
+
+                        <button onclick="changeQuantity(event, '{{ product.id }}', 'plus')" class="btn-counter">+</button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Hozircha mahsulotlar mavjud emas.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="mobile-app">
+        <div class="container mobile-app__wrapper">
+            <div class="mobile-app__content">
+                <h2>Mobil ilovamiz orqali buyurtma berish yanada osonroq</h2>
+                <p>Ilovani yuklab oling va qulay buyurtma bering.</p>
+                <div class="app__links">
+                    <a href="#"><img src="{% static 'food/img/googleplay.png' %}" alt="Google Play"></a>
+                    <a href="#"><img src="{% static 'food/img/apple.png' %}" alt="App Store"></a>
+                </div>
+            </div>
+            <div class="mobile-app__mockup">
+                <img src="{% static 'food/img/big__phone.png' %}" alt="Nonvoy App">
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer__wrapper">
+            <div class="footer__brand">
+                <img src="{% static 'food/img/logo.png' %}" alt="Nonvoy">
+                <p>&copy; 2026 Nonway. Barcha huquqlar himoyalangan.</p>
+            </div>
+
+            <div class="footer__menu">
+                <h4>Menyu</h4>
+                <ul>
+                    <li><a href="{% url 'index' %}">Bosh sahifa</a></li>
+                    <li><a href="#">Mahsulotlar</a></li>
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">Biz haqimizda</a></li>
+                    <li><a href="#">Aloqa</a></li>
+                </ul>
+            </div>
+
+            <div class="footer__contacts">
+                <h4>Biz bilan bog'laning</h4>
+                <p><i class="icon-phone"></i> (99) 123-45-67</p>
+                <p><i class="icon-email"></i> info@nonway.uz</p>
+                <p><i class="icon-loc"></i> Toshkent shahri, O'zbekiston</p>
+            </div>
+
+            <div class="footer__socials">
+                <h4>Biz ijtimoiy tarmoqlarda</h4>
+                <div class="social__icons">
+                    <a href="#"><img src="{% static 'food/img/telegram.svg' %}" alt="Telegram"></a>
+                    <a href="#"><img src="{% static 'food/img/insta.svg' %}" alt="Instagram"></a>
+                    <a href="#"><img src="{% static 'food/img/tiktok.svg' %}" alt="Facebook"></a>
+                    <a href="#"><img src="{% static 'food/img/youtube.svg' %}" alt="YouTube"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="jwtModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px);">
+        <div style="background: white; padding: 35px; border-radius: 20px; width: 360px; text-align: center; position: relative; box-shadow: 0px 10px 30px rgba(0,0,0,0.15); font-family: sans-serif;">
+
+            <span id="closeJwtModal" onclick="document.getElementById('jwtModal').style.display = 'none';" style="position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: #aaa; font-weight: bold;">&times;</span>
+
+            <h2 style="color: #7A5CFA; margin: 0 0 5px 0; font-size: 28px; letter-spacing: 1px;">Nonway</h2>
+            <p style="font-weight: bold; font-size: 18px; color: #333; margin-bottom: 25px;">Tizimga kirish</p>
+
+            <div id="phoneStep">
+                <div style="text-align: left; margin-bottom: 20px;">
+                    <label style="font-size: 13px; color: #666; font-weight: 600;">Telefon raqam</label>
+                    <input type="text" id="jwtPhone" value="+998" style="width: 100%; padding: 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; margin-top: 5px; font-size: 16px; box-sizing: border-box; outline: none; color: #333;">
+                </div>
+                <button id="sendSmsBtn" style="width: 100%; background: #7A5CFA; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s;">
+                    SMS kodni olish
+                </button>
+            </div>
+
+            <div id="codeStep" style="display: none;">
+                <div style="text-align: left; margin-bottom: 20px;">
+                    <label style="font-size: 13px; color: #666; font-weight: 600;">Tasdiqlash kodi</label>
+                    <input type="text" id="smsCode" placeholder="••••" style="width: 100%; padding: 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; margin-top: 5px; font-size: 20px; text-align: center; letter-spacing: 6px; box-sizing: border-box; outline: none; color: #333;">
+                </div>
+                <button id="verifySmsBtn" style="width: 100%; background: #28a745; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s;">
+                    Tasdiqlash va Kirish
+                </button>
+                <p style="margin-top: 15px; font-size: 13px;"><a href="#" id="backToPhone" style="color: #7A5CFA; text-decoration: underline;">Raqamni o'zgartirish</a></p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const jwtModal = document.getElementById('jwtModal');
+        const phoneStep = document.getElementById('phoneStep');
+        const codeStep = document.getElementById('codeStep');
+        const sendSmsBtn = document.getElementById('sendSmsBtn');
+        const verifySmsBtn = document.getElementById('verifySmsBtn');
+        const backToPhone = document.getElementById('backToPhone');
+
+        window.onclick = function(event) {
+            if (event.target == jwtModal) {
+                jwtModal.style.display = "none";
+            }
+        }
+
+        backToPhone.onclick = function(e) {
+            e.preventDefault();
+            phoneStep.style.display = "block";
+            codeStep.style.display = "none";
+        }
+
+        // 1. SMS KOD YUBORISH
+        sendSmsBtn.onclick = function() {
+            const phone = document.getElementById('jwtPhone').value;
+            sendSmsBtn.innerText = "Yuborilmoqda...";
+            sendSmsBtn.disabled = true;
+
+            fetch('/sms-auth/send-sms/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone_number: phone })
+            })
+            .then(response => {
+                if (response.ok) return response.json();
+                throw new Error('Kod yuborishda xatolik! Backendni tekshiring.');
+            })
+            .then(data => {
+                alert('SMS tasdiqlash kodi yuborildi! Terminalni tekshiring.');
+                phoneStep.style.display = "none";
+                codeStep.style.display = "block";
+            })
+            .catch(error => alert(error.message))
+            .finally(() => {
+                sendSmsBtn.innerText = "SMS kodni olish";
+                sendSmsBtn.disabled = false;
+            });
+        };
+
+        // 2. KODNI TEKSHIRISH
+        verifySmsBtn.onclick = function() {
+            const phone = document.getElementById('jwtPhone').value;
+            const code = document.getElementById('smsCode').value;
+            verifySmsBtn.innerText = "Tekshirilmoqda...";
+            verifySmsBtn.disabled = true;
+
+            fetch('/sms-auth/verify-sms/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone_number: phone, code: code })
+            })
+            .then(response => {
+                if (response.ok) return response.json();
+                throw new Error('Kiritilgan tasdiqlash kodi noto‘g‘ri!');
+            })
+            .then(data => {
+                localStorage.setItem('access_token', data.access || data.token);
+                localStorage.setItem('refresh_token', data.refresh);
+                alert('Muvaffaqiyatli kirdingiz!');
+                jwtModal.style.display = "none";
+                location.reload();
+            })
+            .catch(error => alert(error.message))
+            .finally(() => {
+                verifySmsBtn.innerText = "Tasdiqlash va Kirish";
+                verifySmsBtn.disabled = false;
+            });
+        };
+
+        // 3. JONLI - / + COUNTER FUNKSIYASI
+        function changeQuantity(event, productId, action) {
+            if (event) event.preventDefault();
+
+            const qtySpan = document.getElementById(`qty-${productId}`);
+            let currentQty = parseInt(qtySpan.innerText) || 0;
+
+            if (action === 'minus' && currentQty === 0) {
+                return;
+            }
+
+            let url = action === 'plus' ? `/add-to-cart-ajax/${productId}/` : `/remove-from-cart-ajax/${productId}/`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    if (action === 'plus') {
+                        qtySpan.innerText = currentQty + 1;
+                    } else {
+                        qtySpan.innerText = currentQty - 1 >= 0 ? currentQty - 1 : 0;
+                    }
+
+                    const navCart = document.getElementById('nav-cart-count');
+                    if (navCart) {
+                        navCart.innerText = `Savat (${data.total_count})`;
+                    }
+
+                    const totalBtn = document.getElementById('cart-total-btn');
+                    if (totalBtn) {
+                        totalBtn.innerText = data.total_price;
+                    }
+                }
+            })
+            .catch(error => console.error('Savatni yangilashda xatolik:', error));
+        }
+    </script>
+</body>
+</html>
