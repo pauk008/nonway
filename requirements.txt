@@ -1,1 +1,1 @@
-Django==4.2.11dj-database-url==2.1.0psycopg2-binary==2.9.9gunicorn==21.2.0pillow==10.2.0python-dotenv==1.0.1django-mathfilters==1.0.0django-corsheaders==4.3.1
+Django==3.2.25dj-database-url==2.1.0psycopg2-binary==2.9.9gunicorn==21.2.0pillow==10.2.0python-dotenv==1.0.1django-mathfilters==1.0.1django-corsheaders==3.14.0
