@@ -76,13 +76,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# Agarda Render internetdagi DATABASE_URL ni topsa o'shanga ulanadi, topolmasa kompyuteringdagi localhostga ulanadi! 🚀
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:root@localhost:5433/nonway_db'),
-        conn_max_age=600
-    )
-}
+# Render muhitini 100% to'g'ri aniqlash uchun mukammal tizim 🚀
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'nonway_db',
+            'USER': 'postgres',
+            'PASSWORD': 'root',
+            'HOST': 'localhost',
+            'PORT': '5433',
+        }
+    }
 
 
 # Password validation
@@ -132,7 +141,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CSRF_TRUSTED_ORIGINS = ['https://softdev.uz', 'https://www.softdev.uz']
+CSRF_TRUSTED_ORIGINS = ['https://softdev.uz', 'https://www.softdev.uz', 'https://nonway.onrender.com']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
